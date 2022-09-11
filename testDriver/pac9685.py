@@ -81,19 +81,28 @@ class PCA9685:
         "Sets the Servo Pulse,The PWM frequency must be 50HZ"
         pulse = math.floor(pulse*4096/20000)        #PWM frequency is 50HZ,the period is 20000us
         self.setPWM(channel, 0, pulse)
- 
+
+    def setAngle(self,channel,angle):
+        if(angle<0 or angle>180):
+            print("请输入正确角度，舵机",channel,"角度",angle,"°")
+        else:
+            self.setServoPulse(channel,500+(2000/180)*angle)
 if __name__=='__main__':
  
     pwm = PCA9685(0x40, debug=False)
     pwm.setPWMFreq(50)
+    pwm.setServoPulse(0,1500)
+    pwm.setServoPulse(1,500)
+    pwm.setServoPulse(2,1500)
+    
     while True:
     # setServoPulse(2,2500)
-        for i in range(500,2500,20):  
-            pwm.setServoPulse(0,i)
-            pwm.setServoPulse(1,i)   
+        for i in range(500,1200,20):  
+            pwm.setServoPulse(1,i)
+            pwm.setServoPulse(2,i+500)   
             time.sleep(0.02)     
     
-        for i in range(2500,500,-20):
-            pwm.setServoPulse(0,i)
-            pwm.setServoPulse(1,i)   
+        for i in range(1200,500,-20):
+            pwm.setServoPulse(1,i)
+            pwm.setServoPulse(2,i+500)   
             time.sleep(0.02)  
